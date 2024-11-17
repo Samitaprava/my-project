@@ -4,10 +4,11 @@
         maven 'M2_HOME'
     }
      agent any
-	  environment{
-		  sshagent(['deploy']) {
-			  nexusArtifactUploader artifacts: [[artifactId: 'app', classifier: '', file: 'target/myweb.war', type: 'war']], credentialsId: 'nexus', groupId: 'com.idream', nexusUrl: '13.201.102.26:8080/nexus/content/repositories/RepoR/', nexusVersion: 'nexus2', protocol: 'http', repository: 'RepoR', version: '1.6'
-		  }
+	  environment {
+        
+        NEXUS_CREDENTIALS = 'nexus'
+        SSH_CREDENTIALS = 'deploy'
+    }
 	  }
 	  stages{
 	  
@@ -35,9 +36,27 @@
 		}
 		stage("deploy"){
 	    steps{
-		 echo "please deploy my application"
+		 script {
+                    sshagent([SSH_CREDENTIALS]) {
+
+                        nexusArtifactUploader(
+                            artifacts: [[
+                                artifactId: 'app', 
+                                classifier: '', 
+                                file: 'target/myweb.war', 
+                                type: 'war'
+                            ]], 
+                            credentialsId: 'nexus', 
+                            groupId: 'com.idream', 
+                            nexusUrl: 'http://13.201.102.26:8080/nexus/content/repositories/RepoR/', 
+                            nexusVersion: 'nexus2', 
+                            protocol: 'http', 
+                            repository: 'RepoR', 
+                            version: '1.6'
+                        )
+                    }
 		}
+	    }
 		}
-		
-	  }
+
 	}
