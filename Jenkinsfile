@@ -9,12 +9,11 @@
         NEXUS_CREDENTIALS = 'nexus'
         SSH_CREDENTIALS = 'deploy'
     }
-	  }
 	  stages{
 	  
 	  stage("checkout"){
 	   steps{
-	   git 'https://github.com/ashisnishanka/my-project.git'
+	   git'https://github.com/Samitaprava/my-project.git'
 	   }
 	                  }
 	
@@ -39,25 +38,16 @@
 		 script {
                     sshagent([SSH_CREDENTIALS]) {
 
-                        nexusArtifactUploader(
-                            artifacts: [[
-                                artifactId: 'app', 
-                                classifier: '', 
-                                file: 'target/myweb.war', 
-                                type: 'war'
-                            ]], 
-                            credentialsId: 'nexus', 
-                            groupId: 'com.idream', 
-                            nexusUrl: 'http://13.201.102.26:8080/nexus/content/repositories/RepoR/', 
-                            nexusVersion: 'nexus2', 
-                            protocol: 'http', 
-                            repository: 'RepoR', 
-                            version: '1.6'
-                        )
+                        nexusArtifactUploader artifacts:
+			[[artifactId: 'app', classifier: '', file: 'target/myweb.war', type: 'war']], 
+			credentialsId: 'nexus', groupId: 'com.idream', 
+			nexusUrl: 'http://65.2.4.192:8080/nexus',
+			nexusVersion: 'nexus2', protocol: 'http',
+			repository: 'http://65.2.4.192:8080/nexus/content/repositories/RepoR/',
+			version: '1.6'
+		    }
                     }
 		}
 	    }
-		}
 	  }
-
-	}
+ }
